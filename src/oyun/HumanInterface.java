@@ -47,6 +47,7 @@ public class HumanInterface extends JFrame {
 	public Hint playerHint=new Hint(0,0);
 	public Hint computerHint=new Hint(0,0);
 	boolean gameStart=false;
+	private JTextField txtRules;
 	/**
 	 * Launch the application.
 	 */
@@ -250,6 +251,12 @@ public class HumanInterface extends JFrame {
 		startButton.setFont(new Font("Tahoma", Font.BOLD, 18));
 		startButton.setBounds(583, 270, 160, 58);
 		contentPane.add(startButton);
+		
+		txtRules = new JTextField();
+		txtRules.setText("Rules:");
+		txtRules.setBounds(46, 203, 266, 125);
+		contentPane.add(txtRules);
+		txtRules.setColumns(10);
 	}
 	
 	

@@ -12,13 +12,13 @@ public class tahminoyunu{
 		while(hasDupes(target= (gen.nextInt(9000) + 1000)));
 		String targetStr = target +"";
 		boolean guessed = false;
-		Scanner input = new Scanner(System.in);
+		//Scanner input = new Scanner(System.in);
 		int guesses = 0;
 		do{
 			System.out.print("Guess a 4-digit number with no duplicate digits: ");
 			int guess;
 			try{
-				guess = input.nextInt();
+				guess =1234;// input.nextInt();
 				if(hasDupes(guess) || guess < 1000) continue;
 			}catch(InputMismatchException e){
 				continue;
