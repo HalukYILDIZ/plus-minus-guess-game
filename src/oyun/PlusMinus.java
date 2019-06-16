@@ -1,6 +1,7 @@
 package oyun;
 
 public class PlusMinus {
+	//compares two numbers and return hint(plus and minus object) 
 	public static Hint getPlusMinus(int guess,int answer) {
 		Hint plusMinus=new Hint(0,0);
 		String guessStr=Integer.toString(guess);

@@ -27,11 +27,6 @@ import javax.swing.JTextPane;
 
 
 public class HumanInterface extends JFrame {
-
-
-		
-		
-	
 	/**
 	 * 
 	 */
@@ -182,14 +177,17 @@ public class HumanInterface extends JFrame {
 		JButton leftRollButton = new JButton("Roll");
 		rightRollButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//  controls non integer values of minus and plus
 				try {
 					computerHint.bulls= Integer.parseInt(computerBullsValue.getText());
 					computerHint.cows= Integer.parseInt(computerCowsValue.getText());
 				}catch (NumberFormatException nfe){
 					exception = true;
 				}
+				// controls empty values of minus and plus
 				if(	computerBullsValue.getText().equals("") || computerCowsValue.getText( ).equals("")) 
-					JOptionPane.showMessageDialog(null, "Fill plus and minus field");				
+					JOptionPane.showMessageDialog(null, "Fill plus and minus field");	
+				// controls range of minus and plus
 				else if(computerHint.bulls > 4 || computerHint.bulls < 0 ||
 						computerHint.cows > 4 || computerHint.cows < 0 ||
 						computerHint.bulls + computerHint.cows > 4 || exception) {
@@ -198,56 +196,69 @@ public class HumanInterface extends JFrame {
 						computerCowsValue.setText("");
 						exception = false;
 					}
+				// calculation of possible numbers of player's secret number
 				else {
 						char[] guessElement = computerGuess.getText().toCharArray();
+						//compare computer guess number with all possible numbers
 						for (int ans = answers.size() - 1; ans >= 0; ans--)
 						{
 							int tb = 0, tc = 0;
 							char[] answerElement = (answers.get(ans)).toCharArray();
+							//	calculate minus and plus values of all possible numbers
 							for (int ix = 0; ix < 4; ix++)
 							{
+								// check the correct positioned numbers(plus)
 								if ( answerElement[ix] == guessElement[ix])
 									tb++;
+								// check the correct numbers(minus)
 								else if (answers.get(ans).contains(String.valueOf(guessElement[ix])))
 									tc++;
 							}
+							// check and remove answers that has not same minus and plus values from possible answers array
 							if ((tb != computerHint.bulls) || (tc != computerHint.cows))
 								answers.remove(ans);
 						}
+						//roll to other side of the game
 						leftRollButton.setEnabled(true);
 						rightRollButton.setEnabled(false);
 						
 						}
+						//control if there is only one possible answer 
 						if(answers.size() == 1)
 						{
 							JOptionPane.showMessageDialog(null, "I have win !!! your number is "+answers.get(0));
 							leftRollButton.setEnabled(false);
 							rightRollButton.setEnabled(false);
-						}	  
+						}	
+						//control if there is no possible answer
 						if(answers.size()== 0)
 							JOptionPane.showMessageDialog(null, "Your hints are incorrect let's play again");
 						else
 							computerGuess.setText(answers.get(0));
 					}
 			});
-		rightRollButton.setFont(new Font("Tahoma", Font.BOLD, 18));
-		rightRollButton.setEnabled(false);
-		rightRollButton.setBounds(512, 204, 160, 58);
-		contentPane.add(rightRollButton);
-		///****************************************///
-	
-		leftRollButton.setEnabled(false);
-		leftRollButton.setFont(new Font("Tahoma", Font.BOLD, 18));
-		leftRollButton.addActionListener(new ActionListener() {
+		
+			rightRollButton.setFont(new Font("Tahoma", Font.BOLD, 18));
+			rightRollButton.setEnabled(false);
+			rightRollButton.setBounds(512, 204, 160, 58);
+			contentPane.add(rightRollButton);
+			///****************************************///
+			
+			leftRollButton.setEnabled(false);
+			leftRollButton.setFont(new Font("Tahoma", Font.BOLD, 18));
+			leftRollButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//  controls non integer values of player guess number
 				try {
 					plAnswer = Integer.parseInt(playerGuess.getText());
 				}catch (NumberFormatException nfe){
 					exception = true;
 				}
+				// controls empty values of player guess number
 				if(	playerGuess.getText().contentEquals("")) {
 					JOptionPane.showMessageDialog(null, "Fill your guess ");
-				}				
+				}	
+				// controls invalid player guess number
 				else if(plAnswer > 9999 || plAnswer < 1000 ||
 						hasDupes(plAnswer) || exception) {
 					JOptionPane.showMessageDialog(null, "Your guessed number is invalid");
@@ -255,24 +266,25 @@ public class HumanInterface extends JFrame {
 					exception = false;
 				}				
 				else {
-				
-				
-				Hint a = PlusMinus.getPlusMinus(target, plAnswer);
-				playerBullsValue.setText( String.valueOf(a.bulls));
-				playerCowsValue.setText( String.valueOf(a.cows));
-				if(a.bulls == 4) 
+					//compares computer secret number(target) and player answer and give hint to player
+					Hint a = PlusMinus.getPlusMinus(target, plAnswer);
+					playerBullsValue.setText( String.valueOf(a.bulls));
+					playerCowsValue.setText( String.valueOf(a.cows));
+					if(a.bulls == 4) 
 					{
-					JOptionPane.showMessageDialog(null, "You have win !!! my number is "+answers.get(0));
-					leftRollButton.setEnabled(false);
-					rightRollButton.setEnabled(false);
+						JOptionPane.showMessageDialog(null, "You have win !!! my number is "+answers.get(0));
+						leftRollButton.setEnabled(false);
+						rightRollButton.setEnabled(false);
 					}
-				leftRollButton.setEnabled(false);
-				rightRollButton.setEnabled(true);
+					//roll to other side of the game
+					leftRollButton.setEnabled(false);
+					rightRollButton.setEnabled(true);
 				}
 			}
 		});
 		leftRollButton.setBounds(109, 204, 160, 58);
 		contentPane.add(leftRollButton);
+		
 		//********************************************************//
 		JButton startButton = new JButton("Start");
 		startButton.addActionListener(new ActionListener() {
@@ -287,9 +299,10 @@ public class HumanInterface extends JFrame {
 				computerBullsValue.setText( "");
 				computerCowsValue.setText( "");
 				playerGuess.setText("");
-				Random gen= new Random();				
+				Random gen= new Random();
+				// create computer's secret number randomly
 				while(hasDupes(target= (gen.nextInt(9000) + 1000)));
-				//*********************************//
+				//create possible answers
 				int number;
 				for(int i = 1; i < 10; i++)
 					for(int j = 0; j < 10; j++)
@@ -300,11 +313,13 @@ public class HumanInterface extends JFrame {
 									number = i*1000 + j*100 + k*10 + l;
 									answers.add(Integer.toString(number));
 								}
+				// shuffle the numbers of answers array
 				Collections.shuffle(answers);
 				computerGuess.setText(answers.get(0));
 			}
 			
 		});
+		
 		startButton.setFont(new Font("Tahoma", Font.BOLD, 18));
 		startButton.setBounds(583, 270, 160, 58);
 		contentPane.add(startButton);
@@ -318,12 +333,8 @@ public class HumanInterface extends JFrame {
 		txtpnKurallarRakamlar.setText("Rules:\r\n1- I've got a 4-digit number that's different from each other, and you should also keep a number.\r\n2- The left side for your guess and the right side is mine.\r\n3- I'll give you a hint as I expect the same from you; If the digits are in the right place +, if the locations are different -.\r\n4- Who finds first will win the game, let's start the game!");
 		txtpnKurallarRakamlar.setBounds(46, 270, 519, 116);
 		contentPane.add(txtpnKurallarRakamlar);
-		
-		
 	}
-	
-	
- 
+	// checks is the digit numbers are different from each other  
 	public static boolean hasDupes(int num){
 		boolean[] digs = new boolean[10];
 		while(num > 0){
